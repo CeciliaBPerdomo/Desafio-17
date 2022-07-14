@@ -28,6 +28,7 @@
     "express-session": "^1.17.3",
     "flash": "^1.1.0",
     "mongoose": "^6.3.5",
+    "morgan": "^1.10.0",
     "nodemon": "^2.0.16",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",

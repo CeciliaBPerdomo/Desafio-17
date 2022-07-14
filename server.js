@@ -1,6 +1,13 @@
-/*Desafio 12:  Usando el objeto process */
+/*Desafio 17:  DIVIDIR EN CAPAS NUESTRO PROYECTO */
+
 const express = require('express')
 const session = require('express-session')
+const morgan = require('morgan')
+//require('./database/database')
+//require('./src/auth/passport/localAuth')
+
+require('dotenv').config()
+
 const {usuarioReg, model}  = require('./controller/usuariosMongoDB')
 const newUser = new usuarioReg()
 
@@ -15,6 +22,9 @@ const args = require('./src/yargs')
 const apiInfo = require('./routes/apiInfo')
 /* Process */
 const apiRandom = require('./routes/apiRandom')
+
+// Autenticación
+const routerAuth = require('./routes/auth.routes')
 
 /* database */
 const usuarios = []
@@ -69,6 +79,7 @@ passport.deserializeUser( async function(username, done){
     done(null, usuario)
 })
 
+
 const app = express()
 const server = require('http').Server(app)
 const io = require('socket.io')(server)
@@ -93,10 +104,15 @@ app.use(passport.session())
 let messages = []
 const productos = []
 
+// Middlewares
+app.use(morgan('dev'))
 app.use(express.urlencoded({ extended: true }))
+
 app.use(express.static('public'))
 app.set('views', './views')
 app.set('view engine', 'ejs')
+
+app.use('/', routerAuth)
 
 /* Auth */
 function isAuth(req, res, next) {
